@@ -1,0 +1,5 @@
+    Verify 2-legged oauth (per request).
+    base on http://philipsoutham.com/post/2172924723/two-legged-oauth-in-python
+    Parameters accepted as values in "Authorization" header, or as a GET request
+    or in a POST body.
+    options consumer_secret : may be callable, dict, a string, or simple default secret == consumer_key
