@@ -71,7 +71,7 @@ def simple_oauth(consumer_secret=None):
     return decorator
 
 
-@bottle.route('/ajax')
+@bottle.route('/ajax',method=('GET','POST'))
 @simple_oauth()
 def ajax() :
     if not bottle.request.environ.get('oauth_consumer_key') :
@@ -83,7 +83,6 @@ def test(key,secret) :
     method = bottle.request.method
     url = bottle.urljoin(bottle.request.url,'/ajax')
 
-    print method,url
     params = {
         'oauth_version': "1.0",
         'oauth_nonce': oauth2.generate_nonce(),
