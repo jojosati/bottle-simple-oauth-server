@@ -24,13 +24,10 @@ def simple_oauth(consumer_secret=None):
 
     def decorator(func):
         def wrapper(*a, **ka):
-            auth_header = {}
-            if 'Authorization' in bottle.request.headers:
-                auth_header = {'Authorization':bottle.request.headers['Authorization']}
             req = oauth2.Request.from_request(
                 bottle.request.method,
                 bottle.request.url,
-                headers=auth_header,
+                headers=dict([(k,v) for k,v in bottle.request.headers.iteritems()]),
                 # the immutable type of "request.params" prevents us from sending
                 # that directly, so instead we have to turn it into a python
                 # dict
@@ -38,9 +35,10 @@ def simple_oauth(consumer_secret=None):
                 #query_string=bottle.request.query_string
                 )
             # fixed duplicated query bug in oauth2.get_normalized_parameters()
-            req.url = req.normalized_url
+            if bottle.request.method=='GET' :
+                req.url = req.normalized_url
 
-            oauth_key = bottle.request.params.get('oauth_consumer_key')
+            oauth_key = req.get('oauth_consumer_key') #bottle.request.params.get('oauth_consumer_key')
             if oauth_key :
                 secret = None
                 if callable(consumer_secret) :
